@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String    @id @default(cuid())
+  email       String    @unique
+  password    String
+  name        String
+  companyName String?   @map("company_name")
+  address     String?
+  phone       String?
+  logoUrl     String?   @map("logo_url")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  clients  Client[]
+  invoices Invoice[]
+
+  @@map("users")
+}
+
+model Client {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  name      String
+  email     String
+  phone     String?
+  address   String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  invoices Invoice[]
+
+  @@map("clients")
+}
+
+model Invoice {
+  id                String        @id @default(cuid())
+  userId            String        @map("user_id")
+  clientId          String        @map("client_id")
+  invoiceNumber     String        @map("invoice_number")
+  status            InvoiceStatus @default(DRAFT)
+  issueDate         DateTime      @default(now()) @map("issue_date")
+  dueDate           DateTime      @map("due_date")
+  subtotal          Decimal       @db.Decimal(10, 2)
+  taxRate           Decimal       @default(0) @map("tax_rate") @db.Decimal(5, 2)
+  taxAmount         Decimal       @default(0) @map("tax_amount") @db.Decimal(10, 2)
+  total             Decimal       @db.Decimal(10, 2)
+  notes             String?
+  isRecurring       Boolean       @default(false) @map("is_recurring")
+  recurringInterval String?       @map("recurring_interval")
+  createdAt         DateTime      @default(now()) @map("created_at")
+  updatedAt         DateTime      @updatedAt @map("updated_at")
+
+  user     User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  client   Client            @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  items    InvoiceItem[]
+  reminders PaymentReminder[]
+
+  @@unique([userId, invoiceNumber])
+  @@map("invoices")
+}
+
+model InvoiceItem {
+  id          String  @id @default(cuid())
+  invoiceId   String  @map("invoice_id")
+  description String
+  quantity    Decimal @db.Decimal(10, 2)
+  unitPrice   Decimal @map("unit_price") @db.Decimal(10, 2)
+  total       Decimal @db.Decimal(10, 2)
+
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@map("invoice_items")
+}
+
+model PaymentReminder {
+  id            String    @id @default(cuid())
+  invoiceId     String    @map("invoice_id")
+  scheduledDate DateTime  @map("scheduled_date")
+  sentAt        DateTime? @map("sent_at")
+  status        ReminderStatus @default(PENDING)
+
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@map("payment_reminders")
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+enum ReminderStatus {
+  PENDING
+  SENT
+  FAILED
+}
