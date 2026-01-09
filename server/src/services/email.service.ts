@@ -12,6 +12,15 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// Verify SMTP connection on startup
+transporter.verify((error) => {
+  if (error) {
+    console.error('SMTP Connection Error:', error);
+  } else {
+    console.log('SMTP Server is ready to send emails');
+  }
+});
+
 interface InvoiceEmailData {
   invoiceNumber: string;
   issueDate: Date;
@@ -30,9 +39,9 @@ interface InvoiceEmailData {
   user: {
     name: string;
     companyName: string | null;
-    address?: string | null;
+    address: string | null;
     email: string;
-    phone?: string | null;
+    phone: string | null;
   };
   items: Array<{
     description: string;
@@ -81,19 +90,27 @@ export async function sendInvoiceEmail(invoice: InvoiceEmailData): Promise<void>
     </html>
   `;
 
-  await transporter.sendMail({
-    from: config.smtp.from,
-    to: invoice.client.email,
-    subject: `Invoice ${invoice.invoiceNumber} from ${companyName}`,
-    html: htmlContent,
-    attachments: [
-      {
-        filename: `${invoice.invoiceNumber}.pdf`,
-        content: pdfBuffer,
-        contentType: 'application/pdf',
-      },
-    ],
-  });
+  console.log(`Sending invoice email to: ${invoice.client.email}`);
+
+  try {
+    const result = await transporter.sendMail({
+      from: config.smtp.from,
+      to: invoice.client.email,
+      subject: `Invoice ${invoice.invoiceNumber} from ${companyName}`,
+      html: htmlContent,
+      attachments: [
+        {
+          filename: `${invoice.invoiceNumber}.pdf`,
+          content: pdfBuffer,
+          contentType: 'application/pdf',
+        },
+      ],
+    });
+    console.log('Email sent successfully:', result.messageId);
+  } catch (error) {
+    console.error('Failed to send email:', error);
+    throw error;
+  }
 }
 
 interface ReminderEmailData {

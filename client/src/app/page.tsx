@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import {
   FileText,
   CheckCircle,
@@ -12,60 +12,68 @@ import {
   Zap,
   ArrowRight,
   Star,
-} from 'lucide-react';
-import { useAuth } from '@/lib/auth-context';
+} from "lucide-react";
+import { useAuth } from "@/lib/auth-context";
 
 const features = [
   {
     icon: FileText,
-    title: 'Professional Invoices',
-    description: 'Create beautiful, customizable invoices in seconds with our intuitive editor.',
+    title: "Professional Invoices",
+    description:
+      "Create beautiful, customizable invoices in seconds with our intuitive editor.",
   },
   {
     icon: Mail,
-    title: 'Email Delivery',
-    description: 'Send invoices directly to clients with automatic email notifications.',
+    title: "Email Delivery",
+    description:
+      "Send invoices directly to clients with automatic email notifications.",
   },
   {
     icon: BarChart3,
-    title: 'Analytics Dashboard',
-    description: 'Track revenue, monitor payments, and gain insights into your business.',
+    title: "Analytics Dashboard",
+    description:
+      "Track revenue, monitor payments, and gain insights into your business.",
   },
   {
     icon: CheckCircle,
-    title: 'Payment Tracking',
-    description: 'Mark invoices as paid, track overdue payments, and send reminders.',
+    title: "Payment Tracking",
+    description:
+      "Mark invoices as paid, track overdue payments, and send reminders.",
   },
   {
     icon: Shield,
-    title: 'Secure & Private',
-    description: 'Your data is encrypted and secure. We never share your information.',
+    title: "Secure & Private",
+    description:
+      "Your data is encrypted and secure. We never share your information.",
   },
   {
     icon: Zap,
-    title: 'Lightning Fast',
-    description: 'Built for speed. Create and send invoices in under a minute.',
+    title: "Lightning Fast",
+    description: "Built for speed. Create and send invoices in under a minute.",
   },
 ];
 
 const testimonials = [
   {
-    name: 'Sarah Johnson',
-    role: 'Freelance Designer',
-    content: 'This app has transformed how I handle invoicing. I get paid faster and spend less time on admin work.',
-    avatar: 'S',
+    name: "Sarah Johnson",
+    role: "Freelance Designer",
+    content:
+      "This app has transformed how I handle invoicing. I get paid faster and spend less time on admin work.",
+    avatar: "S",
   },
   {
-    name: 'Michael Chen',
-    role: 'Small Business Owner',
-    content: 'The dashboard analytics help me understand my cash flow better than ever before.',
-    avatar: 'M',
+    name: "Michael Chen",
+    role: "Small Business Owner",
+    content:
+      "The dashboard analytics help me understand my cash flow better than ever before.",
+    avatar: "M",
   },
   {
-    name: 'Emily Davis',
-    role: 'Consultant',
-    content: 'Professional invoices, easy tracking, and great customer support. Highly recommended!',
-    avatar: 'E',
+    name: "Emily Davis",
+    role: "Consultant",
+    content:
+      "Professional invoices, easy tracking, and great customer support. Highly recommended!",
+    avatar: "E",
   },
 ];
 
@@ -75,7 +83,7 @@ export default function LandingPage() {
 
   useEffect(() => {
     if (!loading && user) {
-      router.push('/dashboard');
+      router.push("/dashboard");
     }
   }, [user, loading, router]);
 
@@ -101,7 +109,9 @@ export default function LandingPage() {
               <div className="w-9 h-9 bg-primary-600 rounded-lg flex items-center justify-center">
                 <FileText className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-gray-900">InvoiceApp</span>
+              <span className="text-xl font-bold text-gray-900">
+                InvoiceApp
+              </span>
             </div>
             <div className="flex items-center gap-4">
               <Link
@@ -110,10 +120,7 @@ export default function LandingPage() {
               >
                 Sign in
               </Link>
-              <Link
-                href="/register"
-                className="btn-primary"
-              >
+              <Link href="/register" className="btn-primary">
                 Get Started
               </Link>
             </div>
@@ -126,8 +133,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="text-5xl sm:text-6xl font-bold text-gray-900 tracking-tight">
-              Invoicing made{' '}
-              <span className="text-primary-600">simple</span>
+              Invoicing made <span className="text-primary-600">simple</span>
             </h1>
             <p className="mt-6 text-xl text-gray-600 max-w-2xl mx-auto">
               Create professional invoices, track payments, and get paid faster.
@@ -149,7 +155,7 @@ export default function LandingPage() {
               </Link>
             </div>
             <p className="mt-4 text-sm text-gray-500">
-              No credit card required. Free forever for basic use.
+              No credit card required. Free for basic use.
             </p>
           </div>
 
@@ -165,15 +171,26 @@ export default function LandingPage() {
               <div className="p-6 bg-gradient-to-br from-gray-50 to-gray-100">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {[
-                    { label: 'Total Revenue', value: '$24,500', color: 'bg-green-500' },
-                    { label: 'Invoices', value: '48', color: 'bg-blue-500' },
-                    { label: 'Clients', value: '12', color: 'bg-purple-500' },
-                    { label: 'Overdue', value: '$1,200', color: 'bg-red-500' },
+                    {
+                      label: "Total Revenue",
+                      value: "$24,500",
+                      color: "bg-green-500",
+                    },
+                    { label: "Invoices", value: "48", color: "bg-blue-500" },
+                    { label: "Clients", value: "12", color: "bg-purple-500" },
+                    { label: "Overdue", value: "$1,200", color: "bg-red-500" },
                   ].map((stat) => (
-                    <div key={stat.label} className="bg-white rounded-lg p-4 shadow-sm">
-                      <div className={`w-10 h-10 ${stat.color} rounded-lg mb-3`}></div>
+                    <div
+                      key={stat.label}
+                      className="bg-white rounded-lg p-4 shadow-sm"
+                    >
+                      <div
+                        className={`w-10 h-10 ${stat.color} rounded-lg mb-3`}
+                      ></div>
                       <p className="text-sm text-gray-500">{stat.label}</p>
-                      <p className="text-xl md:text-2xl font-bold text-gray-900">{stat.value}</p>
+                      <p className="text-xl md:text-2xl font-bold text-gray-900">
+                        {stat.value}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -234,10 +251,15 @@ export default function LandingPage() {
               >
                 <div className="flex items-center gap-1 mb-4">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                    <Star
+                      key={i}
+                      className="w-5 h-5 fill-yellow-400 text-yellow-400"
+                    />
                   ))}
                 </div>
-                <p className="text-gray-600 mb-6">&quot;{testimonial.content}&quot;</p>
+                <p className="text-gray-600 mb-6">
+                  &quot;{testimonial.content}&quot;
+                </p>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
                     <span className="text-sm font-medium text-primary-700">
@@ -245,7 +267,9 @@ export default function LandingPage() {
                     </span>
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">{testimonial.name}</p>
+                    <p className="font-medium text-gray-900">
+                      {testimonial.name}
+                    </p>
                     <p className="text-sm text-gray-500">{testimonial.role}</p>
                   </div>
                 </div>
@@ -262,7 +286,8 @@ export default function LandingPage() {
             Ready to streamline your invoicing?
           </h2>
           <p className="text-xl text-primary-100 mb-10 max-w-2xl mx-auto">
-            Join thousands of businesses that trust InvoiceApp to manage their invoicing.
+            Join thousands of businesses that trust InvoiceApp to manage their
+            invoicing.
           </p>
           <Link
             href="/register"
@@ -285,9 +310,15 @@ export default function LandingPage() {
               <span className="text-lg font-bold text-white">InvoiceApp</span>
             </div>
             <div className="flex items-center gap-6">
-              <a href="#" className="hover:text-white transition-colors">Privacy</a>
-              <a href="#" className="hover:text-white transition-colors">Terms</a>
-              <a href="#" className="hover:text-white transition-colors">Contact</a>
+              <a href="#" className="hover:text-white transition-colors">
+                Privacy
+              </a>
+              <a href="#" className="hover:text-white transition-colors">
+                Terms
+              </a>
+              <a href="#" className="hover:text-white transition-colors">
+                Contact
+              </a>
             </div>
             <p className="text-sm">
               &copy; {new Date().getFullYear()} InvoiceApp. All rights reserved.
