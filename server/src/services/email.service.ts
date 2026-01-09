@@ -10,6 +10,9 @@ const transporter = nodemailer.createTransport({
     user: config.smtp.user,
     pass: config.smtp.pass,
   },
+  tls: {
+    rejectUnauthorized: false,
+  },
 });
 
 // Verify SMTP connection on startup
@@ -94,7 +97,8 @@ export async function sendInvoiceEmail(invoice: InvoiceEmailData): Promise<void>
 
   try {
     const result = await transporter.sendMail({
-      from: config.smtp.from,
+      from: `${companyName} <onboarding@resend.dev>`,
+      replyTo: invoice.user.email,
       to: invoice.client.email,
       subject: `Invoice ${invoice.invoiceNumber} from ${companyName}`,
       html: htmlContent,
@@ -168,7 +172,8 @@ export async function sendReminderEmail(invoice: ReminderEmailData): Promise<voi
   `;
 
   await transporter.sendMail({
-    from: config.smtp.from,
+    from: `${companyName} <onboarding@resend.dev>`,
+    replyTo: invoice.user.email,
     to: invoice.client.email,
     subject: `${isOverdue ? 'Overdue' : 'Payment'} Reminder: Invoice ${invoice.invoiceNumber}`,
     html: htmlContent,
