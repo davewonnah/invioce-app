@@ -97,7 +97,7 @@ export async function sendInvoiceEmail(invoice: InvoiceEmailData): Promise<void>
 
   try {
     const result = await transporter.sendMail({
-      from: `${companyName} <onboarding@resend.dev>`,
+      from: `${companyName} <${config.smtp.user}>`,
       replyTo: invoice.user.email,
       to: invoice.client.email,
       subject: `Invoice ${invoice.invoiceNumber} from ${companyName}`,
@@ -172,7 +172,7 @@ export async function sendReminderEmail(invoice: ReminderEmailData): Promise<voi
   `;
 
   await transporter.sendMail({
-    from: `${companyName} <onboarding@resend.dev>`,
+    from: `${companyName} <${config.smtp.user}>`,
     replyTo: invoice.user.email,
     to: invoice.client.email,
     subject: `${isOverdue ? 'Overdue' : 'Payment'} Reminder: Invoice ${invoice.invoiceNumber}`,

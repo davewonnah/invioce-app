@@ -33,8 +33,29 @@ async function generateInvoiceNumber(userId: string): Promise<string> {
   return `INV-${year}-${String(count + 1).padStart(4, '0')}`;
 }
 
+async function updateOverdueInvoices(userId: string): Promise<void> {
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+
+  await prisma.invoice.updateMany({
+    where: {
+      userId,
+      status: 'SENT',
+      dueDate: {
+        lt: now,
+      },
+    },
+    data: {
+      status: 'OVERDUE',
+    },
+  });
+}
+
 export const getInvoices = async (req: AuthRequest, res: Response) => {
   const { status, clientId } = req.query;
+
+  // Update overdue invoices before fetching
+  await updateOverdueInvoices(req.user!.id);
 
   const where: any = { userId: req.user!.id };
   if (status) where.status = status;
@@ -54,6 +75,9 @@ export const getInvoices = async (req: AuthRequest, res: Response) => {
 };
 
 export const getInvoice = async (req: AuthRequest, res: Response) => {
+  // Update overdue invoices before fetching
+  await updateOverdueInvoices(req.user!.id);
+
   const invoice = await prisma.invoice.findFirst({
     where: {
       id: req.params.id,
