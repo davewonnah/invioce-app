@@ -30,9 +30,24 @@ services:
       - key: JWT_EXPIRES_IN
         value: 7d
       - key: CLIENT_URL
-        value: https://your-app.vercel.app
+        value: https://invoice-client.onrender.com
       # Add your SMTP settings manually in Render dashboard
       # - key: SMTP_HOST
       # - key: SMTP_PORT
       # - key: SMTP_USER
       # - key: SMTP_PASS
+
+  # Frontend Client Service
+  - type: web
+    name: invoice-client
+    runtime: node
+    region: oregon
+    plan: free
+    rootDir: client
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_URL
+        value: https://invoice-api.onrender.com/api
