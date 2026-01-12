@@ -1,0 +1,59 @@
+databases:
+  - name: invoice-db
+    databaseName: invoice_db
+    user: invoice_user
+    plan: free
+    region: oregon
+
+services:
+  # Backend API Service
+  - type: web
+    name: invoice-api
+    runtime: node
+    region: oregon
+    plan: free
+    rootDir: server
+    buildCommand: npm install && npm run build && npx prisma migrate deploy
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: invoice-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: CLIENT_URL
+        fromService:
+          name: invoice-client
+          type: web
+          property: host
+      # Add your SMTP settings manually in Render dashboard
+      # - key: SMTP_HOST
+      # - key: SMTP_PORT
+      # - key: SMTP_USER
+      # - key: SMTP_PASS
+
+  # Frontend Client Service
+  - type: web
+    name: invoice-client
+    runtime: node
+    region: oregon
+    plan: free
+    rootDir: client
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          name: invoice-api
+          type: web
+          envVarKey: RENDER_EXTERNAL_URL
