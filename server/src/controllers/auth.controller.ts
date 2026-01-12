@@ -6,6 +6,9 @@ import prisma from '../config/database';
 import { config } from '../config';
 import { AuthRequest } from '../middleware/auth';
 
+// JWT expiration in seconds (7 days)
+const JWT_EXPIRY_SECONDS = 7 * 24 * 60 * 60;
+
 const registerSchema = z.object({
   email: z.string().email('Invalid email'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
@@ -51,7 +54,7 @@ export const register = async (req: Request, res: Response) => {
     const token = jwt.sign(
       { userId: user.id, email: user.email },
       config.jwt.secret,
-      { expiresIn: config.jwt.expiresIn } as jwt.SignOptions
+      { expiresIn: JWT_EXPIRY_SECONDS }
     );
 
     res.status(201).json({ user, token });
@@ -84,7 +87,7 @@ export const login = async (req: Request, res: Response) => {
     const token = jwt.sign(
       { userId: user.id, email: user.email },
       config.jwt.secret,
-      { expiresIn: config.jwt.expiresIn } as jwt.SignOptions
+      { expiresIn: JWT_EXPIRY_SECONDS }
     );
 
     res.json({
