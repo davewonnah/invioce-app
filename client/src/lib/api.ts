@@ -240,6 +240,21 @@ export interface AdminInvoice extends Invoice {
 }
 
 // Admin API
+export interface AdminClient {
+  id: string;
+  name: string;
+  email: string;
+  user?: { id: string; name: string };
+}
+
+export interface InvoiceFilters {
+  status?: string;
+  userId?: string;
+  clientId?: string;
+  dateFrom?: string;
+  dateTo?: string;
+}
+
 export const adminApi = {
   getStats: () => api.get<AdminStats>('/admin/stats'),
   getUsers: () => api.get<AdminUser[]>('/admin/users'),
@@ -247,8 +262,12 @@ export const adminApi = {
   updateUser: (id: string, data: Partial<User & { role: Role }>) =>
     api.put<AdminUser>(`/admin/users/${id}`, data),
   deleteUser: (id: string) => api.delete(`/admin/users/${id}`),
-  getInvoices: (params?: { status?: string; userId?: string }) => {
-    const query = new URLSearchParams(params as Record<string, string>).toString();
+  getInvoices: (params?: InvoiceFilters) => {
+    const filteredParams = Object.fromEntries(
+      Object.entries(params || {}).filter(([_, v]) => v !== '' && v !== undefined)
+    );
+    const query = new URLSearchParams(filteredParams as Record<string, string>).toString();
     return api.get<AdminInvoice[]>(`/admin/invoices${query ? `?${query}` : ''}`);
   },
+  getClients: () => api.get<AdminClient[]>('/admin/clients'),
 };

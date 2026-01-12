@@ -6,6 +6,7 @@ import {
   updateUser,
   deleteUser,
   getAllInvoices,
+  getAllClients,
   getAdminStats,
 } from '../controllers/admin.controller';
 
@@ -26,5 +27,8 @@ router.delete('/users/:id', deleteUser);
 
 // Invoice management
 router.get('/invoices', getAllInvoices);
+
+// Client management
+router.get('/clients', getAllClients);
 
 export default router;
