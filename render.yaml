@@ -30,10 +30,7 @@ services:
       - key: JWT_EXPIRES_IN
         value: 7d
       - key: CLIENT_URL
-        fromService:
-          name: invoice-client
-          type: web
-          property: host
+        value: https://invoice-client.onrender.com
       # Add your SMTP settings manually in Render dashboard
       # - key: SMTP_HOST
       # - key: SMTP_PORT
@@ -53,7 +50,4 @@ services:
       - key: NODE_ENV
         value: production
       - key: NEXT_PUBLIC_API_URL
-        fromService:
-          name: invoice-api
-          type: web
-          envVarKey: RENDER_EXTERNAL_URL
+        value: https://invoice-api.onrender.com/api
