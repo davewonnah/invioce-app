@@ -108,11 +108,25 @@ export const deleteUser = async (req: AuthRequest, res: Response) => {
 
 // Get all invoices (from all users)
 export const getAllInvoices = async (req: AuthRequest, res: Response) => {
-  const { status, userId } = req.query;
+  const { status, userId, clientId, dateFrom, dateTo } = req.query;
 
   const where: any = {};
   if (status) where.status = status;
   if (userId) where.userId = userId;
+  if (clientId) where.clientId = clientId;
+
+  // Date range filter
+  if (dateFrom || dateTo) {
+    where.createdAt = {};
+    if (dateFrom) {
+      where.createdAt.gte = new Date(dateFrom as string);
+    }
+    if (dateTo) {
+      const toDate = new Date(dateTo as string);
+      toDate.setHours(23, 59, 59, 999);
+      where.createdAt.lte = toDate;
+    }
+  }
 
   const invoices = await prisma.invoice.findMany({
     where,
@@ -128,6 +142,23 @@ export const getAllInvoices = async (req: AuthRequest, res: Response) => {
   });
 
   res.json(invoices);
+};
+
+// Get all clients (for filter dropdown)
+export const getAllClients = async (req: AuthRequest, res: Response) => {
+  const clients = await prisma.client.findMany({
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      user: {
+        select: { id: true, name: true },
+      },
+    },
+    orderBy: { name: 'asc' },
+  });
+
+  res.json(clients);
 };
 
 // Get admin dashboard stats
