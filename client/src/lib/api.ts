@@ -130,10 +130,13 @@ export const dashboardApi = {
 };
 
 // Types
+export type Role = 'USER' | 'ADMIN';
+
 export interface User {
   id: string;
   email: string;
   name: string;
+  role?: Role;
   companyName?: string;
   address?: string;
   phone?: string;
@@ -206,3 +209,46 @@ export interface ChartData {
   month: string;
   revenue: number;
 }
+
+// Admin Types
+export interface AdminUser extends User {
+  createdAt: string;
+  _count?: {
+    invoices: number;
+    clients: number;
+  };
+}
+
+export interface AdminStats {
+  totalUsers: number;
+  totalInvoices: number;
+  totalClients: number;
+  totalRevenue: number;
+  monthlyRevenue: number;
+  invoicesByStatus: Record<string, number>;
+  revenuByStatus: Record<string, number>;
+  recentUsers: AdminUser[];
+}
+
+export interface AdminInvoice extends Invoice {
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+    companyName?: string;
+  };
+}
+
+// Admin API
+export const adminApi = {
+  getStats: () => api.get<AdminStats>('/admin/stats'),
+  getUsers: () => api.get<AdminUser[]>('/admin/users'),
+  getUser: (id: string) => api.get<AdminUser>(`/admin/users/${id}`),
+  updateUser: (id: string, data: Partial<User & { role: Role }>) =>
+    api.put<AdminUser>(`/admin/users/${id}`, data),
+  deleteUser: (id: string) => api.delete(`/admin/users/${id}`),
+  getInvoices: (params?: { status?: string; userId?: string }) => {
+    const query = new URLSearchParams(params as Record<string, string>).toString();
+    return api.get<AdminInvoice[]>(`/admin/invoices${query ? `?${query}` : ''}`);
+  },
+};

@@ -12,6 +12,7 @@ model User {
   email       String    @unique
   password    String
   name        String
+  role        Role      @default(USER)
   companyName String?   @map("company_name")
   address     String?
   phone       String?
@@ -23,6 +24,11 @@ model User {
   invoices Invoice[]
 
   @@map("users")
+}
+
+enum Role {
+  USER
+  ADMIN
 }
 
 model Client {

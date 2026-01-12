@@ -44,6 +44,7 @@ export const register = async (req: Request, res: Response) => {
         email: true,
         name: true,
         companyName: true,
+        role: true,
       },
     });
 
@@ -92,6 +93,7 @@ export const login = async (req: Request, res: Response) => {
         email: user.email,
         name: user.name,
         companyName: user.companyName,
+        role: user.role,
       },
       token,
     });
@@ -114,6 +116,7 @@ export const getMe = async (req: AuthRequest, res: Response) => {
       address: true,
       phone: true,
       logoUrl: true,
+      role: true,
     },
   });
 
@@ -142,6 +145,7 @@ export const updateProfile = async (req: AuthRequest, res: Response) => {
       address: true,
       phone: true,
       logoUrl: true,
+      role: true,
     },
   });
 

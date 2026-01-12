@@ -7,6 +7,7 @@ import { authApi, User } from './api';
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  isAdmin: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (data: { email: string; password: string; name: string; companyName?: string }) => Promise<void>;
   logout: () => void;
@@ -60,8 +61,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(updated);
   };
 
+  const isAdmin = user?.role === 'ADMIN';
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, updateUser }}>
+    <AuthContext.Provider value={{ user, loading, isAdmin, login, register, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );
